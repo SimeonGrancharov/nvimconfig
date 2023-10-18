@@ -14,7 +14,7 @@ return require('packer').startup(function(use)
   }
 
   -- theme
-  use "rebelot/kanagawa.nvim"
+  use "sainnhe/everforest"
 
   -- highlighting
   use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })

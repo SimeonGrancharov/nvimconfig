@@ -84,6 +84,11 @@ _G.packer_plugins = {
     path = "/Users/simeongrancharov/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp",
     url = "https://github.com/hrsh7th/cmp-nvim-lsp"
   },
+  everforest = {
+    loaded = true,
+    path = "/Users/simeongrancharov/.local/share/nvim/site/pack/packer/start/everforest",
+    url = "https://github.com/sainnhe/everforest"
+  },
   ["format-on-save.nvim"] = {
     loaded = true,
     path = "/Users/simeongrancharov/.local/share/nvim/site/pack/packer/start/format-on-save.nvim",
@@ -93,11 +98,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/simeongrancharov/.local/share/nvim/site/pack/packer/start/harpoon",
     url = "https://github.com/ThePrimeagen/harpoon"
-  },
-  ["kanagawa.nvim"] = {
-    loaded = true,
-    path = "/Users/simeongrancharov/.local/share/nvim/site/pack/packer/start/kanagawa.nvim",
-    url = "https://github.com/rebelot/kanagawa.nvim"
   },
   ["lsp-zero.nvim"] = {
     loaded = true,
