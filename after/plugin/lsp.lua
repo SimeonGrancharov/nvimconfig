@@ -1,9 +1,8 @@
 local lsp = require('lsp-zero')
 local lspconfig = require('lspconfig')
+local typescript = require('typescript')
 
-lsp.preset("recommended")
-
-lsp.on_attach(function(_, bufnr)
+local on_attach = function(client, bufnr)
   -- see :help lsp-zero-keybindings
   -- to learn the available actions
   lsp.default_keymaps({ buffer = bufnr })
@@ -22,7 +21,18 @@ lsp.on_attach(function(_, bufnr)
 
   vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
   vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-end)
+
+  -- typescript specific keymaps (e.g. rename file and update imports)
+  if client.name == "tsserver" then
+    vim.keymap.set("n", "<leader>rf", ":TypescriptRenameFile<CR>")      -- rename file and update imports
+    vim.keymap.set("n", "<leader>oi", ":TypescriptOrganizeImports<CR>") -- organize imports (not in youtube nvim video)
+    vim.keymap.set("n", "<leader>ru", ":TypescriptRemoveUnused<CR>")    -- remove unused variables (not in youtube nvim video)
+  end
+end
+
+lsp.preset("recommended")
+
+lsp.on_attach(on_attach)
 
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -33,8 +43,8 @@ cmp.setup({
     documentation = cmp.config.window.bordered(),
   },
   mapping = {
-    ['<C-j>'] = cmp.mapping.select_prev_item(cmp_select),
-    ['<C-k>'] = cmp.mapping.select_next_item(cmp_select),
+    ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
+    ['<C-j>'] = cmp.mapping.select_next_item(cmp_select),
     ['<Tab>'] = cmp.mapping.confirm({ select = true }),
     ["<C-Space>"] = cmp.mapping.complete(),
   },
@@ -54,12 +64,17 @@ lsp.configure('lua_ls', {
   },
 })
 
-
-
-require('mason').setup({})
+require('mason').setup({
+  ensure_installed = {
+    'prettier',
+    'prettierd'
+  }
+})
 require('mason-lspconfig').setup({
   ensure_installed = {
     'tsserver',
+    'eslint',
+    'html',
     'lua_ls'
   },
   handlers = {
@@ -75,4 +90,8 @@ lspconfig.eslint.setup({
       command = "EslintFixAll",
     })
   end,
+})
+
+typescript.setup({
+  on_attach = on_attach
 })

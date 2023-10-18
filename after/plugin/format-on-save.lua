@@ -10,9 +10,7 @@ format_on_save.setup({
     css = formatters.lsp,
     html = formatters.lsp,
     java = formatters.lsp,
-    javascript = formatters.lsp,
     json = formatters.lsp,
-    lua = formatters.lsp,
     markdown = formatters.prettierd,
     openscad = formatters.lsp,
     python = formatters.black,
@@ -21,8 +19,8 @@ format_on_save.setup({
     scss = formatters.lsp,
     sh = formatters.shfmt,
     terraform = formatters.lsp,
-    typescript = formatters.lsp,
-    typescriptreact = formatters.lsp,
+    typescript = formatters.prettierd,
+    typescriptreact = formatters.prettierd,
     lua = formatters.lsp,
     yaml = formatters.lsp,
 
@@ -37,15 +35,6 @@ format_on_save.setup({
         pattern = { ".prettierrc", ".prettierrc.*", "prettier.config.*" },
         formatter = formatters.prettierd,
       }),
-      -- By default it stops at the git repo root (or "/" if git repo not found)
-      -- but it can be customized with the `stop_path` option:
-      formatters.if_file_exists({
-        pattern = ".prettierrc",
-        formatter = formatters.prettierd,
-        stop_path = function()
-          return "/my/custom/stop/path"
-        end
-      })
     }
   },
 

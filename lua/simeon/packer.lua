@@ -7,24 +7,31 @@ return require('packer').startup(function(use)
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
 
+  -- fuzzy-finder
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.1',
     -- or                            , branch = '0.1.x', requires = { {'nvim-lua/plenary.nvim'} }
   }
 
+  -- theme
   use "rebelot/kanagawa.nvim"
 
+  -- highlighting
   use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
-
   use('nvim-treesitter/playground')
 
+
+  -- unuseful stuff at all
   use 'nvim-lua/plenary.nvim'
   use 'ThePrimeagen/harpoon'
 
+  -- undo history
   use 'mbbill/undotree'
 
+  -- git stuff
   use 'tpope/vim-fugitive'
 
+  -- the lsp stuff
   use {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v3.x',
@@ -42,6 +49,10 @@ return require('packer').startup(function(use)
     }
   }
 
+  -- additional lsp configs
+  use("jose-elias-alvarez/typescript.nvim") -- additional functionality for typescript server (e.g. rename file & update imports)
+  use("onsails/lspkind.nvim")               -- vs-code like icons for autocompletion
+
   -- formatting on save
   use 'elentok/format-on-save.nvim'
 
@@ -50,11 +61,6 @@ return require('packer').startup(function(use)
     'nvim-lualine/lualine.nvim',
     requires = { 'nvim-tree/nvim-web-devicons', opt = true }
   }
-
-  -- multiplexing
-  use { "akinsho/toggleterm.nvim", tag = '*', config = function()
-    require("toggleterm").setup()
-  end }
 
   -- smooooth operatooooor (scrolling)
   use 'karb94/neoscroll.nvim'
@@ -86,4 +92,9 @@ return require('packer').startup(function(use)
       'nvim-tree/nvim-web-devicons', -- optional
     },
   }
+
+
+  --autoclosing
+  use("windwp/nvim-autopairs")                                 -- autoclose parens, brackets, quotes, etc...
+  use({ "windwp/nvim-ts-autotag", after = "nvim-treesitter" }) -- autoclose tags
 end)
