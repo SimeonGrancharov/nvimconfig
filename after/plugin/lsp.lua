@@ -75,7 +75,8 @@ require('mason-lspconfig').setup({
     'tsserver',
     'eslint',
     'html',
-    'lua_ls'
+    'lua_ls',
+    'cssls'
   },
   handlers = {
     lsp.default_setup,
