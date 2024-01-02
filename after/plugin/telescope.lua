@@ -30,7 +30,8 @@ telescope.setup({
       mappings = picker_mappings
     },
     buffers = {
-      initial_mode = 'normal'
+      initial_mode = 'normal',
+      sort_lastused = true,
     }
   }
 })

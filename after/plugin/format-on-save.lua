@@ -36,6 +36,7 @@ format_on_save.setup({
         pattern = { ".prettierrc", ".prettierrc.*", "prettier.config.*" },
         formatter = formatters.prettierd,
       }),
+      formatters.lsp
     }
   },
 
