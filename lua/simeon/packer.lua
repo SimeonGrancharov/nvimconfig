@@ -100,4 +100,9 @@ return require('packer').startup(function(use)
 
   -- git hunks
   use('lewis6991/gitsigns.nvim')
+  use {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {},
+  }
 end)
