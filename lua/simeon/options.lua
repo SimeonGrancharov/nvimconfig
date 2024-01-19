@@ -25,7 +25,7 @@ vim.opt.undofile = true
 
 -- search
 vim.opt.incsearch = true
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 
 -- disable line wrapping
 vim.opt.wrap = false
