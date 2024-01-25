@@ -23,6 +23,9 @@ keymap.set('n', '<ESC>', builtin.buffers, {})
 
 telescope.setup({
   pickers = {
+    git_files = {
+      mappings = picker_mappings
+    },
     find_files = {
       mappings = picker_mappings
     },
