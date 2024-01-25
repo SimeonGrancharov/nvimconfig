@@ -5,9 +5,6 @@ vim.g.loaded_netrwPlugin = 1
 -- set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
 
--- empty setup using defaults
-require("nvim-tree").setup()
-
 local api = require "nvim-tree.api"
 
 -- OR setup with some options
@@ -20,7 +17,7 @@ require("nvim-tree").setup({
     group_empty = true,
   },
   filters = {
-    dotfiles = true,
+    dotfiles = false,
   },
 
   -- custom mappings

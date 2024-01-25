@@ -1,6 +1,6 @@
 require('lualine').setup({
   options = {
-    theme = 'everforest'
+    theme = 'gruvbox-material'
   },
   sections = {
     lualine_y = {

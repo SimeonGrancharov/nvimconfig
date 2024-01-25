@@ -14,8 +14,7 @@ return require('packer').startup(function(use)
   }
 
   -- theme
-  use "sainnhe/everforest"
-
+  use { "catppuccin/nvim", as = "catppuccin" }
   -- highlighting
   use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
   use('nvim-treesitter/playground')
@@ -93,6 +92,9 @@ return require('packer').startup(function(use)
     },
   }
 
+  use {
+    'nvim-tree/nvim-web-devicons', -- optional
+  }
 
   --autoclosing
   use("windwp/nvim-autopairs")                                 -- autoclose parens, brackets, quotes, etc...
