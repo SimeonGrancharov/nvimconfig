@@ -6,7 +6,6 @@ local on_attach = function(client, bufnr)
   -- see :help lsp-zero-keybindings
   -- to learn the available actions
   lsp.default_keymaps({ buffer = bufnr })
-
   local opts = { buffer = bufnr, remap = false }
 
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -15,7 +14,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
   vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
   vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-  vim.keymap.set("n", "<leader>ga", function() vim.lsp.buf.code_action() end, opts)
   vim.keymap.set("n", "<leader>gr", function() vim.lsp.buf.references() end, opts)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 
@@ -46,7 +44,7 @@ cmp.setup({
     ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
     ['<C-j>'] = cmp.mapping.select_next_item(cmp_select),
     ['<Tab>'] = cmp.mapping.confirm({ select = true }),
-    ["<C-Space>"] = cmp.mapping.complete(),
+    ["<C-c>"] = cmp.mapping.complete(),
   },
   sources = {
     { name = 'nvim_lsp' },
@@ -63,6 +61,7 @@ lsp.configure('lua_ls', {
     },
   },
 })
+
 
 require('mason').setup({
   ensure_installed = {
@@ -83,16 +82,30 @@ require('mason-lspconfig').setup({
   },
 })
 
-lspconfig.eslint.setup({
-  --- ...
-  on_attach = function(_, bufnr)
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      buffer = bufnr,
-      command = "EslintFixAll",
-    })
-  end,
-})
+-- lspconfig.eslint.setup({
+--   --- ...
+--   on_attach = function(_, bufnr)
+--     vim.api.nvim_create_autocmd("BufWritePre", {
+--       buffer = bufnr,
+--       command = "EslintFixAll",
+--     })
+--   end,
+-- })
 
 typescript.setup({
-  on_attach = on_attach
+  on_attach = on_attach,
 })
+
+lspconfig.cssls.setup {}
+lspconfig.somesass_ls.setup {}
+lspconfig.css_variables.setup {}
+lspconfig.cssmodules_ls.setup {}
+lspconfig.tsserver.setup {
+  init_options = {
+    preferences = {
+      -- other preferences...
+      importModuleSpecifierPreference = 'relative',
+      -- importModuleSpecifierEnding = 'minimal',
+    }
+  }
+}

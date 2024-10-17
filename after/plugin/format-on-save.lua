@@ -9,9 +9,10 @@ format_on_save.setup({
   },
   formatter_by_ft = {
     css = formatters.lsp,
+    less = formatters.prettierd,
     html = formatters.lsp,
     java = formatters.lsp,
-    json = formatters.lsp,
+    json = formatters.prettierd,
     markdown = formatters.prettierd,
     openscad = formatters.lsp,
     python = formatters.black,
@@ -30,7 +31,7 @@ format_on_save.setup({
     javascript = {
       formatters.if_file_exists({
         pattern = ".eslintrc.*",
-        formatter = formatters.eslint_d_fix
+        formatter = formatters.prettierd
       }),
       formatters.if_file_exists({
         pattern = { ".prettierrc", ".prettierrc.*", "prettier.config.*" },

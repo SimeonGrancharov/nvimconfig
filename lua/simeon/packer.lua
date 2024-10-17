@@ -31,6 +31,9 @@ return require('packer').startup(function(use)
   -- git stuff
   use 'tpope/vim-fugitive'
 
+  -- colors highlighting
+  use 'norcalli/nvim-colorizer.lua'
+
   -- the lsp stuff
   use {
     'VonHeikemen/lsp-zero.nvim',

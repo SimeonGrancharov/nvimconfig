@@ -27,7 +27,8 @@ telescope.setup({
       mappings = picker_mappings
     },
     find_files = {
-      mappings = picker_mappings
+      mappings = picker_mappings,
+      hidden = true
     },
     grep_string = {
       mappings = picker_mappings
