@@ -1,6 +1,6 @@
 local lsp = require('lsp-zero')
 local lspconfig = require('lspconfig')
-local typescript = require('typescript')
+-- local typescript = require('typescript')
 
 local on_attach = function(client, bufnr)
   -- see :help lsp-zero-keybindings
@@ -19,13 +19,6 @@ local on_attach = function(client, bufnr)
 
   vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
   vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-
-  -- typescript specific keymaps (e.g. rename file and update imports)
-  if client.name == "tsserver" then
-    vim.keymap.set("n", "<leader>rf", ":TypescriptRenameFile<CR>")      -- rename file and update imports
-    vim.keymap.set("n", "<leader>oi", ":TypescriptOrganizeImports<CR>") -- organize imports (not in youtube nvim video)
-    vim.keymap.set("n", "<leader>ru", ":TypescriptRemoveUnused<CR>")    -- remove unused variables (not in youtube nvim video)
-  end
 end
 
 lsp.preset("recommended")
@@ -71,7 +64,7 @@ require('mason').setup({
 })
 require('mason-lspconfig').setup({
   ensure_installed = {
-    'tsserver',
+    'ts_ls',
     'eslint',
     'html',
     'lua_ls',
@@ -81,6 +74,7 @@ require('mason-lspconfig').setup({
     lsp.default_setup,
   },
 })
+
 
 -- lspconfig.eslint.setup({
 --   --- ...
@@ -92,15 +86,15 @@ require('mason-lspconfig').setup({
 --   end,
 -- })
 
-typescript.setup({
-  on_attach = on_attach,
-})
+-- typescript.setup({
+--   on_attach = on_attach,
+-- })
 
 lspconfig.cssls.setup {}
 lspconfig.somesass_ls.setup {}
 lspconfig.css_variables.setup {}
 lspconfig.cssmodules_ls.setup {}
-lspconfig.tsserver.setup {
+lspconfig.ts_ls.setup {
   init_options = {
     preferences = {
       -- other preferences...

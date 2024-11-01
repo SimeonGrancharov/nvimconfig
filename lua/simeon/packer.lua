@@ -53,8 +53,13 @@ return require('packer').startup(function(use)
   }
 
   -- additional lsp configs
-  use("jose-elias-alvarez/typescript.nvim") -- additional functionality for typescript server (e.g. rename file & update imports)
-  use("onsails/lspkind.nvim")               -- vs-code like icons for autocompletion
+  -- use("jose-elias-alvarez/typescript.nvim") -- additional functionality for typescript server (e.g. rename file & update imports)
+  use {
+    "pmizio/typescript-tools.nvim",
+    requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" }
+  }
+
+  use("onsails/lspkind.nvim") -- vs-code like icons for autocompletion
 
   -- formatting on save
   use 'elentok/format-on-save.nvim'
