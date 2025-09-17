@@ -119,4 +119,19 @@ return require('packer').startup(function(use)
   }
   -- some tuned UI plugin
   use { 'stevearc/dressing.nvim' }
+
+  use({
+    "roobert/tailwindcss-colorizer-cmp.nvim",
+    -- optionally, override the default options:
+    config = function()
+      require("tailwindcss-colorizer-cmp").setup({
+        color_square_width = 2,
+      })
+    end
+  })
+
+  use {
+    "j-hui/fidget.nvim",
+    tag = "legacy", -- use "legacy" if you want the stable release
+  }
 end)

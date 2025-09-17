@@ -103,3 +103,32 @@ lspconfig.ts_ls.setup {
     }
   }
 }
+
+vim.api.nvim_set_hl(0, "NormalFloat", {
+  bg = "#32302f", -- Gruvbox soft dark background (slightly transparent feel)
+  fg = "#d5c4a1"  -- Gruvbox soft light foreground (matches soft contrast)
+})
+
+vim.api.nvim_set_hl(0, "FloatBorder", {
+  bg = "#32302f", -- Match window background
+  fg = "#bdae93"  -- Gruvbox soft gray for subtle borders
+})
+
+-- Optional: Additional Gruvbox soft-themed highlights
+vim.api.nvim_set_hl(0, "FloatTitle", {
+  bg = "#32302f",
+  fg = "#fb4934", -- Gruvbox red for titles
+  bold = true
+})
+
+
+-- Override vim's default floating window creation
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = opts.border or "rounded"
+  opts.max_width = opts.max_width or 80
+  opts.max_height = opts.max_height or 20
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end

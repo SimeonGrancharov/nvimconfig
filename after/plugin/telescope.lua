@@ -22,6 +22,9 @@ end)
 keymap.set('n', '<ESC>', builtin.buffers, {})
 
 telescope.setup({
+  defaults = {
+    file_ignore_patterns = { "node_modules" }
+  },
   pickers = {
     git_files = {
       mappings = picker_mappings
