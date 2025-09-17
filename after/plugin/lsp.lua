@@ -1,11 +1,7 @@
-local lsp = require('lsp-zero')
 local lspconfig = require('lspconfig')
--- local typescript = require('typescript')
 
+-- LSP keymaps
 local on_attach = function(client, bufnr)
-  -- see :help lsp-zero-keybindings
-  -- to learn the available actions
-  lsp.default_keymaps({ buffer = bufnr })
   local opts = { buffer = bufnr, remap = false }
 
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -16,15 +12,83 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
   vim.keymap.set("n", "<leader>gr", function() vim.lsp.buf.references() end, opts)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-
   vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
   vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
 end
 
-lsp.preset("recommended")
+-- Configure completion capabilities
+local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-lsp.on_attach(on_attach)
+-- Setup Mason
+require('mason').setup({
+  ensure_installed = {
+    'prettier',
+    'prettierd'
+  }
+})
 
+require('mason-lspconfig').setup({
+  ensure_installed = {
+    'ts_ls',
+    'eslint',
+    'html',
+    'lua_ls',
+    'cssls'
+  },
+  handlers = {
+    function(server_name)
+      lspconfig[server_name].setup({
+        on_attach = on_attach,
+        capabilities = cmp_capabilities,
+      })
+    end,
+  },
+})
+
+-- Custom server configurations
+lspconfig.lua_ls.setup({
+  on_attach = on_attach,
+  capabilities = cmp_capabilities,
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim' },
+      },
+    },
+  },
+})
+
+lspconfig.ts_ls.setup({
+  on_attach = on_attach,
+  capabilities = cmp_capabilities,
+  init_options = {
+    preferences = {
+      importModuleSpecifierPreference = 'relative',
+    }
+  }
+})
+
+lspconfig.cssls.setup({
+  on_attach = on_attach,
+  capabilities = cmp_capabilities,
+})
+
+lspconfig.somesass_ls.setup({
+  on_attach = on_attach,
+  capabilities = cmp_capabilities,
+})
+
+lspconfig.css_variables.setup({
+  on_attach = on_attach,
+  capabilities = cmp_capabilities,
+})
+
+lspconfig.cssmodules_ls.setup({
+  on_attach = on_attach,
+  capabilities = cmp_capabilities,
+})
+
+-- Completion setup
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
@@ -44,83 +108,22 @@ cmp.setup({
   },
 })
 
--- formatting
-lsp.configure('lua_ls', {
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { 'vim' },
-      },
-    },
-  },
-})
-
-
-require('mason').setup({
-  ensure_installed = {
-    'prettier',
-    'prettierd'
-  }
-})
-require('mason-lspconfig').setup({
-  ensure_installed = {
-    'ts_ls',
-    'eslint',
-    'html',
-    'lua_ls',
-    'cssls'
-  },
-  handlers = {
-    lsp.default_setup,
-  },
-})
-
-
--- lspconfig.eslint.setup({
---   --- ...
---   on_attach = function(_, bufnr)
---     vim.api.nvim_create_autocmd("BufWritePre", {
---       buffer = bufnr,
---       command = "EslintFixAll",
---     })
---   end,
--- })
-
--- typescript.setup({
---   on_attach = on_attach,
--- })
-
-lspconfig.cssls.setup {}
-lspconfig.somesass_ls.setup {}
-lspconfig.css_variables.setup {}
-lspconfig.cssmodules_ls.setup {}
-lspconfig.ts_ls.setup {
-  init_options = {
-    preferences = {
-      -- other preferences...
-      importModuleSpecifierPreference = 'relative',
-      -- importModuleSpecifierEnding = 'minimal',
-    }
-  }
-}
-
+-- Floating window styling
 vim.api.nvim_set_hl(0, "NormalFloat", {
-  bg = "#32302f", -- Gruvbox soft dark background (slightly transparent feel)
-  fg = "#d5c4a1"  -- Gruvbox soft light foreground (matches soft contrast)
+  bg = "#32302f",
+  fg = "#d5c4a1"
 })
 
 vim.api.nvim_set_hl(0, "FloatBorder", {
-  bg = "#32302f", -- Match window background
-  fg = "#bdae93"  -- Gruvbox soft gray for subtle borders
+  bg = "#32302f",
+  fg = "#bdae93"
 })
 
--- Optional: Additional Gruvbox soft-themed highlights
 vim.api.nvim_set_hl(0, "FloatTitle", {
   bg = "#32302f",
-  fg = "#fb4934", -- Gruvbox red for titles
+  fg = "#fb4934",
   bold = true
 })
-
 
 -- Override vim's default floating window creation
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
