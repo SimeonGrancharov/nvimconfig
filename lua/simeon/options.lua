@@ -40,28 +40,28 @@ vim.opt.signcolumn = 'yes'
 vim.opt.shell = 'zsh --login'
 
 -- Remove unused + organize imports on save (synchronous)
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = vim.api.nvim_create_augroup("ts_imports", { clear = true }),
-  pattern = { "*.ts", "*.tsx" },
-  callback = function()
-    local actions = { "source.removeUnused.ts", "source.organizeImports.ts" }
-
-    for _, actionKind in ipairs(actions) do
-      local params = vim.lsp.util.make_range_params()
-      params.context = { only = { actionKind } }
-
-      local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
-      if result then
-        for _, res in pairs(result) do
-          for _, action in pairs(res.result or {}) do
-            if action.edit then
-              vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
-            elseif type(action.command) == "table" then
-              vim.lsp.buf.execute_command(action.command)
-            end
-          end
-        end
-      end
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   group = vim.api.nvim_create_augroup("ts_imports", { clear = true }),
+--   pattern = { "*.ts", "*.tsx" },
+--   callback = function()
+--     local actions = { "source.removeUnused.ts", "source.organizeImports.ts" }
+--
+--     for _, actionKind in ipairs(actions) do
+--       local params = vim.lsp.util.make_range_params()
+--       params.context = { only = { actionKind } }
+--
+--       local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
+--       if result then
+--         for _, res in pairs(result) do
+--           for _, action in pairs(res.result or {}) do
+--             if action.edit then
+--               vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+--             elseif type(action.command) == "table" then
+--               vim.lsp.buf.execute_command(action.command)
+--             end
+--           end
+--         end
+--       end
+--     end
+--   end,
+-- })

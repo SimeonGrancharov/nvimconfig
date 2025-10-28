@@ -16,6 +16,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
 end
 
+
 -- Configure completion capabilities
 local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -63,7 +64,7 @@ lspconfig.ts_ls.setup({
   capabilities = cmp_capabilities,
   init_options = {
     preferences = {
-      importModuleSpecifierPreference = 'relative',
+      importModuleSpecifierPreference = 'non-relative',
     }
   }
 })

@@ -1,48 +1,79 @@
-local format_on_save = require("format-on-save")
-local formatters = require("format-on-save.formatters")
-local create = require("format-on-save.formatters.create")
-
-format_on_save.setup({
-  exclude_path_patterns = {
-    "/node_modules/",
-    ".local/share/nvim/lazy",
-  },
-  formatter_by_ft = {
-    css = formatters.lsp,
-    less = formatters.prettierd,
-    html = formatters.lsp,
-    java = formatters.lsp,
-    json = formatters.prettierd,
-    markdown = formatters.prettierd,
-    openscad = formatters.lsp,
-    python = formatters.black,
-    rust = formatters.lsp,
-    scad = formatters.lsp,
-    scss = formatters.lsp,
-    sh = formatters.shfmt,
-    terraform = formatters.lsp,
-    typescript = formatters.prettierd,
-    typescriptreact = formatters.prettierd,
-    lua = formatters.lsp,
-    yaml = formatters.lsp,
-
-    -- Add conditional formatter that only runs if a certain file exists
-    -- in one of the parent directories.
-    javascript = {
-      formatters.if_file_exists({
-        pattern = ".eslintrc.*",
-        formatter = formatters.prettierd
-      }),
-      formatters.if_file_exists({
-        pattern = { ".prettierrc", ".prettierrc.*", "prettier.config.*" },
-        formatter = formatters.prettierd,
-      }),
-      formatters.lsp
-    }
-  },
-
-
-  -- By default, all shell commands are prefixed with "sh -c" (see PR #3)
-  -- To prevent that set `run_with_sh` to `false`.
-  run_with_sh = false
-})
+-- local format_on_save = require("format-on-save")
+-- local formatters = require("format-on-save.formatters")
+-- local create = require("format-on-save.formatters.create")
+-- vim.lsp.handlers["textDocument/formatting"] = function() end
+-- local function find_tsconfig_root()
+--   local dir = vim.fn.expand("%:p:h")
+--   local tsconfig = vim.fn.findfile("tsconfig.json", dir .. ";")
+--   if tsconfig == "" then
+--     local git_root = vim.fn.finddir(".git", dir .. ";")
+--     if git_root == "" then
+--       return vim.fn.getcwd()
+--     else
+--       return vim.fn.fnamemodify(git_root, ":h")
+--     end
+--   else
+--     return vim.fn.fnamemodify(tsconfig, ":h")
+--   end
+-- end
+--
+-- local function prettierd_monorepo()
+--   local filepath = vim.fn.expand("%")
+--   local cwd = find_tsconfig_root()
+--
+--   -- resolve prettier in hoisted root node_modules
+--   local root = vim.fn.finddir(".git", cwd .. ";")
+--   if root == "" then
+--     root = vim.fn.getcwd()
+--   else
+--     root = vim.fn.fnamemodify(root, ":h")
+--   end
+--   local prettier_bin = root .. "/node_modules/.bin/prettier"
+--
+--   return require("format-on-save.formatters").shell({
+--     cmd = { prettier_bin, filepath },
+--     cwd = cwd, -- still run from tsconfig folder
+--     stdin = false,
+--     ignore_stderr = false,
+--   })
+-- end
+--
+-- format_on_save.setup({
+--   exclude_path_patterns = {
+--     "/node_modules/",
+--     ".local/share/nvim/lazy",
+--   },
+--   formatter_by_ft = {
+--     css = formatters.lsp,
+--     less = formatters.prettierd,
+--     html = formatters.lsp,
+--     java = formatters.lsp,
+--     json = formatters.prettierd,
+--     markdown = formatters.prettierd,
+--     openscad = formatters.lsp,
+--     python = formatters.black,
+--     rust = formatters.lsp,
+--     scad = formatters.lsp,
+--     scss = formatters.lsp,
+--     sh = formatters.shfmt,
+--     terraform = formatters.lsp,
+--     typescript = prettierd_monorepo,
+--     typescriptreact = prettierd_monorepo,
+--     lua = formatters.lsp,
+--     yaml = formatters.lsp,
+--
+--     javascript = {
+--       formatters.if_file_exists({
+--         pattern = ".eslintrc.*",
+--         formatter = formatters.prettierd
+--       }),
+--       formatters.if_file_exists({
+--         pattern = { ".prettierrc", ".prettierrc.*", "prettier.config.*" },
+--         formatter = formatters.prettierd,
+--       }),
+--       formatters.lsp
+--     }
+--   },
+--
+--   run_with_sh = false
+-- })

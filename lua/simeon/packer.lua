@@ -54,7 +54,8 @@ return require('packer').startup(function(use)
   use("onsails/lspkind.nvim") -- vs-code like icons for autocompletion
 
   -- formatting on save
-  use 'elentok/format-on-save.nvim'
+  -- use 'elentok/format-on-save.nvim'
+  use 'stevearc/conform.nvim'
 
   -- pretty nice status line for nvim
   use {
