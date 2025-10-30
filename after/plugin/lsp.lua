@@ -1,5 +1,3 @@
-local lspconfig = require('lspconfig')
-
 -- LSP keymaps
 local on_attach = function(client, bufnr)
   local opts = { buffer = bufnr, remap = false }
@@ -16,7 +14,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
 end
 
-
 -- Configure completion capabilities
 local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -28,6 +25,22 @@ require('mason').setup({
   }
 })
 
+-- Setup LspAttach autocmd for keymaps
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client then
+      on_attach(client, args.buf)
+    end
+  end,
+})
+
+-- Set default capabilities for all servers
+vim.lsp.config['*'] = {
+  capabilities = cmp_capabilities,
+}
+
+-- Setup mason-lspconfig (it will auto-configure vim.lsp.config)
 require('mason-lspconfig').setup({
   ensure_installed = {
     'ts_ls',
@@ -36,20 +49,10 @@ require('mason-lspconfig').setup({
     'lua_ls',
     'cssls'
   },
-  handlers = {
-    function(server_name)
-      lspconfig[server_name].setup({
-        on_attach = on_attach,
-        capabilities = cmp_capabilities,
-      })
-    end,
-  },
 })
 
--- Custom server configurations
-lspconfig.lua_ls.setup({
-  on_attach = on_attach,
-  capabilities = cmp_capabilities,
+-- Custom configs for specific servers
+vim.lsp.config.lua_ls = vim.tbl_deep_extend('force', vim.lsp.config.lua_ls or {}, {
   settings = {
     Lua = {
       diagnostics = {
@@ -59,9 +62,7 @@ lspconfig.lua_ls.setup({
   },
 })
 
-lspconfig.ts_ls.setup({
-  on_attach = on_attach,
-  capabilities = cmp_capabilities,
+vim.lsp.config.ts_ls = vim.tbl_deep_extend('force', vim.lsp.config.ts_ls or {}, {
   init_options = {
     preferences = {
       importModuleSpecifierPreference = 'non-relative',
@@ -69,25 +70,10 @@ lspconfig.ts_ls.setup({
   }
 })
 
-lspconfig.cssls.setup({
-  on_attach = on_attach,
-  capabilities = cmp_capabilities,
-})
-
-lspconfig.somesass_ls.setup({
-  on_attach = on_attach,
-  capabilities = cmp_capabilities,
-})
-
-lspconfig.css_variables.setup({
-  on_attach = on_attach,
-  capabilities = cmp_capabilities,
-})
-
-lspconfig.cssmodules_ls.setup({
-  on_attach = on_attach,
-  capabilities = cmp_capabilities,
-})
+-- Enable all servers
+for _, server in ipairs({ 'lua_ls', 'ts_ls', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'eslint', 'html', 'prettier', 'somesass_ls', 'tailwindcss' }) do
+  vim.lsp.enable(server)
+end
 
 -- Completion setup
 local cmp = require('cmp')
