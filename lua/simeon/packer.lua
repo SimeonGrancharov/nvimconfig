@@ -119,6 +119,8 @@ return require('packer').startup(function(use)
     end
   })
 
+  use { 'folke/noice.nvim'}
+
   use {
     "j-hui/fidget.nvim",
     tag = "legacy", -- use "legacy" if you want the stable release
