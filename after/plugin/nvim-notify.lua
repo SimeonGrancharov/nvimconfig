@@ -19,13 +19,3 @@ notify.setup({
   top_down = true
 })
 
--- Filter out background color warnings
-local banned_messages = { "background" }
-vim.notify = function(msg, ...)
-  for _, banned in ipairs(banned_messages) do
-    if msg and msg:match(banned) then
-      return
-    end
-  end
-  notify(msg, ...)
-end
