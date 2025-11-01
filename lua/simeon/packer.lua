@@ -119,7 +119,13 @@ return require('packer').startup(function(use)
     end
   })
 
-  use { 'folke/noice.nvim'}
+  use {
+    'folke/noice.nvim',
+    requires = {
+      'MunifTanjim/nui.nvim',
+      'rcarriga/nvim-notify',
+    }
+  }
 
   use {
     "j-hui/fidget.nvim",
