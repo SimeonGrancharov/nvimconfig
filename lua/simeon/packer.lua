@@ -131,4 +131,10 @@ return require('packer').startup(function(use)
     "j-hui/fidget.nvim",
     tag = "legacy", -- use "legacy" if you want the stable release
   }
+
+  -- dashboard/welcome screen
+  use {
+    'goolord/alpha-nvim',
+    requires = { 'nvim-tree/nvim-web-devicons' },
+  }
 end)

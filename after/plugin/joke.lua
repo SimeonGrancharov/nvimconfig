@@ -33,13 +33,13 @@ local function show_startup_joke()
   -- Check if noice is loaded
   local noice_ok, noice = pcall(require, "noice")
   if noice_ok and noice.notify then
-    noice.notify("🎭 " .. joke, "info", {
-      title = "Dad Joke of the Day",
-      timeout = 8000,
-    })
+    -- noice.notify("🎭 " .. joke, "info", {
+    --   title = "Dad Joke of the Day",
+    --   timeout = 8000,
+    -- })
   else
     -- Fallback to regular notify
-    vim.notify("🎭 Dad Joke: " .. joke, vim.log.levels.INFO)
+    -- vim.notify("🎭 Dad Joke: " .. joke, vim.log.levels.INFO)
   end
 end
 
