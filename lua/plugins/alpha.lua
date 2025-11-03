@@ -68,8 +68,14 @@ return {
         -- OS info
         local os_info = "💻    " .. vim.loop.os_uname().sysname .. "  " .. vim.loop.os_uname().release
 
-        -- Plugin count
-        local plugin_count = #vim.fn.globpath(vim.fn.stdpath("data") .. "/site/pack/*/start/*", "", 1, 1)
+        -- Plugin count (lazy.nvim)
+        local plugin_count = 0
+        local stats_ok, lazy_stats = pcall(require, "lazy.stats")
+        if stats_ok then
+          local stats = lazy_stats.stats()
+          plugin_count = stats.loaded
+        end
+
         local plugins_info = string.format("📦    %d  plugins  loaded", plugin_count)
 
         -- Create info lines

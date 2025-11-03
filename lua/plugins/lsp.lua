@@ -60,6 +60,104 @@ return {
         end, 10)
       end
 
+      -- Function to organize imports and remove unused (except React)
+      local function organize_and_remove_unused()
+        local bufnr = vim.api.nvim_get_current_buf()
+
+        local function get_actions_and_apply(kind, filter_fn)
+          local params = {
+            textDocument = vim.lsp.util.make_text_document_params(bufnr),
+            range = {
+              start = { line = 0, character = 0 },
+              ['end'] = { line = vim.api.nvim_buf_line_count(bufnr), character = 0 }
+            },
+            context = {
+              diagnostics = {},
+              only = { kind }
+            }
+          }
+
+          local result = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 1000)
+
+          if result then
+            for _, response in pairs(result) do
+              if response.result then
+                for _, action in ipairs(response.result) do
+                  if not filter_fn or filter_fn(action) then
+                    if action.edit then
+                      vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+                    elseif action.command then
+                      vim.lsp.buf.execute_command(action.command)
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        -- Step 1: Organize imports (no filter)
+        get_actions_and_apply("source.organizeImports")
+
+        -- Step 2: Remove unused imports (filter out React)
+        local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+        local react_lines = {}
+        for i, line in ipairs(lines) do
+          if line:match("from%s+['\"]react['\"]") or line:match("import%s+React") then
+            react_lines[i - 1] = true  -- 0-indexed
+          end
+        end
+
+        get_actions_and_apply("source.removeUnusedImports", function(action)
+          if not action.edit then return true end
+
+          local function is_import_line(line_num)
+            local line = lines[line_num + 1] or ""
+            return line:match("^import%s") or line:match("^%s*import%s")
+          end
+
+          -- Check documentChanges format
+          if action.edit.documentChanges then
+            for _, change in ipairs(action.edit.documentChanges) do
+              if change.edits then
+                for _, edit in ipairs(change.edits) do
+                  local line_num = edit.range.start.line
+
+                  -- Skip if not an import line (filtering out variable removals)
+                  if not is_import_line(line_num) then
+                    return false
+                  end
+
+                  -- Skip if it's a React import
+                  if react_lines[line_num] then
+                    return false
+                  end
+                end
+              end
+            end
+          -- Check changes format
+          elseif action.edit.changes then
+            for _, edits in pairs(action.edit.changes) do
+              for _, edit in ipairs(edits) do
+                local line_num = edit.range.start.line
+
+                -- Skip if not an import line (filtering out variable removals)
+                if not is_import_line(line_num) then
+                  return false
+                end
+
+                -- Skip if it's a React import
+                if react_lines[line_num] then
+                  return false
+                end
+              end
+            end
+          end
+
+          return true
+        end)
+      end
+
       -- LSP keymaps
       local on_attach = function(client, bufnr)
         local opts = { buffer = bufnr, remap = false }
@@ -74,6 +172,7 @@ return {
         vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
         vim.keymap.set('n', '<leader>rn', custom_rename, opts)
         vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+        vim.keymap.set('n', '<leader>oi', organize_and_remove_unused, opts)
       end
 
       -- Configure completion capabilities
@@ -86,6 +185,14 @@ return {
           if client then
             on_attach(client, args.buf)
           end
+        end,
+      })
+
+      -- Auto-organize and remove unused imports on save for TS/TSX files
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        pattern = { '*.ts', '*.tsx', '*.js', '*.jsx' },
+        callback = function()
+          organize_and_remove_unused()
         end,
       })
 
