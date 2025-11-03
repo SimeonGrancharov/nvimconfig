@@ -2,6 +2,8 @@
 vim.o.showmode = false
 -- ruler is integrated in our statusline
 vim.opt.ruler = false
+-- global statusline (one statusline for all windows)
+vim.o.laststatus = 3
 -- fast update times - what's not to like
 vim.opt.updatetime = 50
 

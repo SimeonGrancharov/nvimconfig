@@ -9,23 +9,37 @@ vim.api.nvim_set_hl(0, "FzfLuaPreviewTitle", { fg = "#FF5370", bold = true })
 
 fzf.setup({
   winopts = {
-    height = 0.5,
-    width = 1.0,
-    row = 1.0,
+    height = 0.85,
+    width = 0.85,
+    row = 0.5,
+    col = 0.5,
     border = "rounded",
     preview = {
-      layout = "vertical",
-      vertical = "down:50%",
+      layout = "flex",
     },
+  },
+  fzf_opts = {
+    ['--layout'] = 'default',
+    ['--info'] = 'inline',
+    ['--padding'] = '1,2,1,2',  -- top,right,bottom,left padding
   },
   keymap = {
     builtin = {
       ["<Esc>"] = "hide",
+      ["<C-x>"] = "file-split",
+      ["<C-v>"] = "file-vsplit",
     },
     fzf = {
       ["ctrl-j"] = "down",
       ["ctrl-k"] = "up",
       ["esc"] = "abort",
+    },
+  },
+  actions = {
+    files = {
+      ["default"] = actions.file_edit,
+      ["ctrl-x"] = actions.file_split,
+      ["ctrl-v"] = actions.file_vsplit,
     },
   },
   files = {
@@ -43,9 +57,6 @@ fzf.setup({
   grep = {
     prompt = "Rg❯ ",
     input_prompt = "Grep❯ ",
-    winopts = {
-      width = 1.0,
-    },
   },
   buffers = {
     prompt = "Buffers❯ ",

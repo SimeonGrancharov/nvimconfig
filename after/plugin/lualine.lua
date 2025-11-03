@@ -168,7 +168,7 @@ require('lualine').setup({
     ignore_focus = {},
     always_divide_middle = true,
     always_show_tabline = true,
-    globalstatus = false,
+    globalstatus = true,
     refresh = {
       statusline = 1000,
       tabline = 100,
@@ -204,3 +204,7 @@ require('lualine').setup({
   inactive_winbar = {},
   extensions = {},
 })
+
+-- Red background for the window separator between splits
+vim.api.nvim_set_hl(0, "WinSeparator", { bg = "#FF5370", fg = "#FF5370" })
+vim.api.nvim_set_hl(0, "VertSplit", { bg = "#FF5370", fg = "#FF5370" })
