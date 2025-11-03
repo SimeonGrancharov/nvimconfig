@@ -1,3 +1,31 @@
+-- Custom rename function with arrow keys enabled
+local function custom_rename()
+  local curr_name = vim.fn.expand("<cword>")
+
+  vim.ui.input({
+    prompt = "New name: ",
+    default = curr_name,
+  }, function(new_name)
+    if new_name and new_name ~= "" and new_name ~= curr_name then
+      vim.lsp.buf.rename(new_name)
+    end
+  end)
+
+  -- Re-enable arrow keys in the rename popup
+  vim.defer_fn(function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = bufnr })
+
+    if buftype == 'prompt' then
+      local opts = { buffer = bufnr, noremap = true, silent = true }
+      vim.keymap.set('i', '<Left>', '<Left>', opts)
+      vim.keymap.set('i', '<Right>', '<Right>', opts)
+      vim.keymap.set('i', '<Up>', '<Up>', opts)
+      vim.keymap.set('i', '<Down>', '<Down>', opts)
+    end
+  end, 10)
+end
+
 -- LSP keymaps
 local on_attach = function(client, bufnr)
   local opts = { buffer = bufnr, remap = false }
@@ -10,7 +38,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
   vim.keymap.set("n", "<leader>gr", function() vim.lsp.buf.references() end, opts)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-  vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+  vim.keymap.set('n', '<leader>rn', custom_rename, opts)
   vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
 end
 

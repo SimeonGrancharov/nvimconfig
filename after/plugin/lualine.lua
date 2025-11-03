@@ -45,17 +45,6 @@ local battery_component = {
     end
     return status
   end,
-
-  color = function()
-    local percent = last_battery_percent
-    if percent < 20 then
-      return { fg = "#ff5555" }  -- red
-    elseif percent < 50 then
-      return { fg = "#f1fa8c" }  -- yellow
-    else
-      return { fg = "#50fa7b" }  -- green
-    end
-  end,
 }
 
 local time_component = {
@@ -79,7 +68,6 @@ local lsp_component = {
 
     return "⚙️  " .. table.concat(names, ", ")
   end,
-  color = { fg = "#89b4fa" },  -- blue
 }
 
 -- Search count component
@@ -100,7 +88,6 @@ local search_component = {
 
     return string.format("🔍 %d/%d", search.current, search.total)
   end,
-  color = { fg = "#f9e2af" },  -- yellow
 }
 
 -- Macro recording indicator
@@ -112,15 +99,68 @@ local macro_component = {
     end
     return "⏺️  @" .. reg
   end,
-  color = { fg = "#f38ba8", gui = "bold" },  -- red and bold
+}
+
+-- BMW M Colors Theme (warmer tones for black background)
+-- Left sections: Light Blue → Dark Blue → Red (BMW M stripes)
+-- Right sections: Light Blue → Dark Blue → Red (BMW M stripes)
+local bmw_m_theme = {
+  normal = {
+    a = { bg = '#4DD4FF', fg = '#ffffff', gui = 'bold' },  -- Warmer Light Blue
+    b = { bg = '#3D8BFF', fg = '#ffffff' },                -- Warmer Dark Blue
+    c = { bg = '#FF5370', fg = '#ffffff' },                -- Warmer Red
+    z = { bg = '#4DD4FF', fg = '#ffffff' },                -- Warmer Light Blue
+    y = { bg = '#3D8BFF', fg = '#ffffff' },                -- Warmer Dark Blue
+    x = { bg = '#FF5370', fg = '#ffffff', gui = 'bold' },  -- Warmer Red
+  },
+  insert = {
+    a = { bg = '#4DD4FF', fg = '#ffffff', gui = 'bold' },
+    b = { bg = '#3D8BFF', fg = '#ffffff' },
+    c = { bg = '#FF5370', fg = '#ffffff' },
+    z = { bg = '#4DD4FF', fg = '#ffffff' },
+    y = { bg = '#3D8BFF', fg = '#ffffff' },
+    x = { bg = '#FF5370', fg = '#ffffff', gui = 'bold' },
+  },
+  visual = {
+    a = { bg = '#4DD4FF', fg = '#ffffff', gui = 'bold' },
+    b = { bg = '#3D8BFF', fg = '#ffffff' },
+    c = { bg = '#FF5370', fg = '#ffffff' },
+    z = { bg = '#4DD4FF', fg = '#ffffff' },
+    y = { bg = '#3D8BFF', fg = '#ffffff' },
+    x = { bg = '#FF5370', fg = '#ffffff', gui = 'bold' },
+  },
+  replace = {
+    a = { bg = '#4DD4FF', fg = '#ffffff', gui = 'bold' },
+    b = { bg = '#3D8BFF', fg = '#ffffff' },
+    c = { bg = '#FF5370', fg = '#ffffff' },
+    z = { bg = '#4DD4FF', fg = '#ffffff' },
+    y = { bg = '#3D8BFF', fg = '#ffffff' },
+    x = { bg = '#FF5370', fg = '#ffffff', gui = 'bold' },
+  },
+  command = {
+    a = { bg = '#4DD4FF', fg = '#ffffff', gui = 'bold' },
+    b = { bg = '#3D8BFF', fg = '#ffffff' },
+    c = { bg = '#FF5370', fg = '#ffffff' },
+    z = { bg = '#4DD4FF', fg = '#ffffff' },
+    y = { bg = '#3D8BFF', fg = '#ffffff' },
+    x = { bg = '#FF5370', fg = '#ffffff', gui = 'bold' },
+  },
+  inactive = {
+    a = { bg = '#2a2a2a', fg = '#606060', gui = 'bold' },
+    b = { bg = '#2a2a2a', fg = '#606060' },
+    c = { bg = '#1a1a1a', fg = '#606060' },
+    z = { bg = '#1a1a1a', fg = '#606060' },
+    y = { bg = '#2a2a2a', fg = '#606060' },
+    x = { bg = '#2a2a2a', fg = '#606060' },
+  },
 }
 
 require('lualine').setup({
   options = {
     icons_enabled = true,
-    theme = 'gruvbox-material',
-    component_separators = { left = "", right = "" },
-    section_separators = { left = "", right = "" },
+    theme = bmw_m_theme,
+    section_separators = { left = '▓▒░', right = '░▒▓' },
+    component_separators = {left="", right=""},
     disabled_filetypes = {
       statusline = {},
       winbar = {},
@@ -137,15 +177,26 @@ require('lualine').setup({
   },
   sections = {
     lualine_a = { "mode", macro_component },
-    lualine_b = { "branch", "diff", "diagnostics" },
+    lualine_b = {
+      "branch",
+      {
+        "diff",
+        colored = true,
+        diff_color = {
+          added = { fg = "#ffffff" },
+          modified = { fg = "#ffffff" },
+          removed = { fg = "#ffffff" },
+        },
+      },
+      "diagnostics"
+    },
     lualine_c = { { "filename", path = 4 }, lsp_component, search_component },
     lualine_x = { battery_component, "|", time_component },
     lualine_y = { "progress", "location" },
     lualine_z = {
-      {
-        require("noice").api.status.command.get,
-        cond = require("noice").api.status.command.has,
-      },
+      function()
+        return "///M"
+      end
     },
   },
   tabline = {},

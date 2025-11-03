@@ -12,6 +12,10 @@ vim.api.nvim_set_hl(0, 'BMWDarkBlue', { fg = '#0C4DA2' })
 vim.api.nvim_set_hl(0, 'BMWRed', { fg = '#E4032E' })
 vim.api.nvim_set_hl(0, 'BMWWhite', { fg = '#FFFFFF' })
 
+-- Footer table styling
+vim.api.nvim_set_hl(0, 'AlphaFooterBorder', { fg = '#4DD4FF', bold = true })
+vim.api.nvim_set_hl(0, 'AlphaFooterText', { fg = '#FFFFFF' })
+
 -- BMW M Logo ASCII Art with colors (no extra top lines)
 -- 32 in length
 dashboard.section.header.val = {
@@ -89,24 +93,24 @@ local function get_footer()
   -- Add more padding for bigger appearance
   max_width = max_width + 20
 
-  -- Build bordered output with double lines for emphasis
+  -- Build bordered output with rounded corners and double thickness
   local result = {}
   table.insert(result, "")
   table.insert(result, "")
-  table.insert(result, "╔" .. string.rep("═", max_width) .. "╗")
-  table.insert(result, "║" .. string.rep(" ", max_width) .. "║")
-  table.insert(result, "║" .. string.rep(" ", max_width) .. "║")
+  table.insert(result, "╭" .. string.rep("─", max_width) .. "╮")
+  table.insert(result, "│" .. string.rep(" ", max_width) .. "│")
+  table.insert(result, "│" .. string.rep(" ", max_width) .. "│")
 
   for _, line in ipairs(info_lines) do
     local visual_len = vim.fn.strdisplaywidth(line)
     local padding = max_width - visual_len - 10
-    local padded_line = "║          " .. line .. string.rep(" ", padding) .. "║"
+    local padded_line = "│          " .. line .. string.rep(" ", padding) .. "│"
     table.insert(result, padded_line)
-    table.insert(result, "║" .. string.rep(" ", max_width) .. "║")
-    table.insert(result, "║" .. string.rep(" ", max_width) .. "║")
+    table.insert(result, "│" .. string.rep(" ", max_width) .. "│")
+    table.insert(result, "│" .. string.rep(" ", max_width) .. "│")
   end
 
-  table.insert(result, "╚" .. string.rep("═", max_width) .. "╝")
+  table.insert(result, "╰" .. string.rep("─", max_width) .. "╯")
   table.insert(result, "")
   table.insert(result, "")
 
@@ -114,6 +118,57 @@ local function get_footer()
 end
 
 dashboard.section.footer.val = get_footer()
+
+-- Apply per-line highlighting to color borders and text differently
+local footer_lines = dashboard.section.footer.val
+local highlights = {}
+
+for i, line in ipairs(footer_lines) do
+  local line_hl = {}
+
+  -- Check if line has border characters
+  if line:match("^[╭╰]") or line:match("^│") then
+    -- For lines with borders, we need to color each character properly
+    local result = {}
+    local in_border = true
+    local pos = 0
+
+    for char in line:gmatch("[%z\1-\127\194-\244][\128-\191]*") do
+      local char_len = #char
+
+      -- Check if character is a border character
+      if char:match("[╭╰│╮╯─]") then
+        if not in_border or #result == 0 then
+          table.insert(result, { "AlphaFooterBorder", pos, pos + char_len })
+          in_border = true
+        else
+          -- Extend the previous border highlight
+          result[#result][3] = pos + char_len
+        end
+      else
+        -- Text content
+        if in_border or #result == 0 then
+          table.insert(result, { "AlphaFooterText", pos, pos + char_len })
+          in_border = false
+        else
+          -- Extend the previous text highlight
+          result[#result][3] = pos + char_len
+        end
+      end
+
+      pos = pos + char_len
+    end
+
+    line_hl = result
+  else
+    -- Empty lines
+    table.insert(line_hl, { "AlphaFooterText", 0, -1 })
+  end
+
+  table.insert(highlights, line_hl)
+end
+
+dashboard.section.footer.opts.hl = highlights
 
 -- Layout (without buttons)
 dashboard.config.layout = {

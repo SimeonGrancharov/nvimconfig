@@ -1,12 +1,34 @@
 -- Noice setup for beautiful notifications and UI
 require("noice").setup({
   cmdline = {
-    enabled = false, -- Disable cmdline popup, use default vim cmdline
+    enabled = true, -- Enable fancy cmdline
+    view = "cmdline", -- Use regular cmdline view (bottom of screen)
+    format = {
+      cmdline = { pattern = "^:", icon = "  ", lang = "vim" },
+      search_down = { kind = "search", pattern = "^/", icon = " 🔍 ", view = "cmdline_input" },
+      search_up = { kind = "search", pattern = "^%?", icon = " 🔍 ", view = "cmdline_input" },
+      filter = { pattern = "^:%s*!", icon = " $ ", lang = "bash" },
+      lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "  ", lang = "lua" },
+      help = { pattern = "^:%s*he?l?p?%s+", icon = " 󰋖 " },
+    },
   },
   messages = {
-    enabled = false, -- Enable messages (for notifications)
+    enabled = false, -- Disable messages (for notifications)
+  },
+  popupmenu = {
+    enabled = false, -- Disable popupmenu handling (let telescope work)
+  },
+  notify = {
+    enabled = false, -- Disable notify handling
   },
   lsp = {
+    -- Disable noice from handling hover and signature help to prevent UI breakage
+    hover = {
+      enabled = false,
+    },
+    signature = {
+      enabled = false,
+    },
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
     override = {
       ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -16,11 +38,11 @@ require("noice").setup({
   },
   -- you can enable a preset for easier configuration
   presets = {
-    bottom_search = false, -- use default bottom cmdline for search
+    bottom_search = false, -- we want custom styled search, not classic
     command_palette = false, -- keep cmdline at the bottom (default behavior)
     long_message_to_split = true, -- long messages will be sent to a split
     inc_rename = false, -- enables an input dialog for inc-rename.nvim
-    lsp_doc_border = false, -- add a border to hover docs and signature help
+    lsp_doc_border = true, -- add a border to hover docs and signature help
   },
   routes = {
     {
@@ -33,8 +55,66 @@ require("noice").setup({
       },
       opts = { skip = true },
     },
+    {
+      filter = {
+        event = "msg_show",
+        kind = "",
+        find = "telescope",
+      },
+      opts = { skip = true },
+    },
   },
   views = {
+    cmdline = {
+      border = {
+        style = "rounded",
+        padding = { 0, 1 },
+      },
+      win_options = {
+        winhighlight = {
+          Normal = "NoiceCmdlineNormal",
+          FloatBorder = "NoiceCmdlineBorder",
+          Title = "NoiceCmdlineTitle",
+        },
+      },
+    },
+    cmdline_popup = {
+      border = {
+        style = "rounded",
+        padding = { 0, 1 },
+      },
+      win_options = {
+        winhighlight = {
+          Normal = "Normal",
+          FloatBorder = "NoiceCmdlineBorder",
+          Title = "NoiceCmdlineTitle",
+        },
+        winblend = 0,
+      },
+    },
+    cmdline_input = {
+      position = {
+        row = "100%",
+        col = 0,
+      },
+      size = {
+        width = "100%",
+        height = "auto",
+      },
+      border = {
+        style = "rounded",
+        padding = { 0, 1 },
+      },
+      win_options = {
+        winhighlight = {
+          Normal = "Normal",
+          FloatBorder = "NoiceCmdlineBorder",
+          Title = "NoiceCmdlineTitle",
+          NormalFloat = "Normal",
+        },
+        winblend = 0,
+      },
+    },
     notify = {
       relative = "editor",
       position = {
@@ -48,3 +128,30 @@ require("noice").setup({
     },
   },
 })
+
+-- Custom border colors for cmdline (BMW M inspired)
+vim.api.nvim_set_hl(0, "NoiceCmdlineBorder", { fg = "#4DD4FF", bold = true })
+vim.api.nvim_set_hl(0, "NoiceCmdlineIcon", { fg = "#4DD4FF" })
+vim.api.nvim_set_hl(0, "NoiceCmdlinePopupBorder", { fg = "#4DD4FF", bold = true })
+vim.api.nvim_set_hl(0, "NoiceCmdlinePopupBorderSearch", { fg = "#4DD4FF", bold = true })
+vim.api.nvim_set_hl(0, "NoiceCmdlineIconSearch", { fg = "#4DD4FF" })
+vim.api.nvim_set_hl(0, "NoiceCmdlinePopupTitle", { fg = "#FF5370", bold = true })
+-- Hide the title completely
+vim.api.nvim_set_hl(0, "NoiceCmdlineTitle", { fg = "NONE", bg = "NONE" })
+-- Make cmdline text white
+vim.api.nvim_set_hl(0, "NoiceCmdlineNormal", { fg = "#ffffff", bg = "NONE" })
+vim.api.nvim_set_hl(0, "NoiceCmdlinePrompt", { fg = "#ffffff" })
+vim.api.nvim_set_hl(0, "NoiceCmdlineInput", { fg = "#ffffff" })
+-- Override treesitter/semantic token colors in cmdline
+vim.api.nvim_set_hl(0, "@text.literal", { fg = "#ffffff" })
+vim.api.nvim_set_hl(0, "@text.uri", { fg = "#ffffff" })
+vim.api.nvim_set_hl(0, "@string.regex", { fg = "#ffffff" })
+-- Make search text white
+vim.api.nvim_set_hl(0, "NoiceFormatSearch", { fg = "#ffffff" })
+vim.api.nvim_set_hl(0, "NoiceCmdlinePopupBorderCmdline", { fg = "#4DD4FF", bold = true })
+-- Override any red text in cmdline and search
+vim.api.nvim_set_hl(0, "Search", { fg = "#000000", bg = "#FFCC00" })
+vim.api.nvim_set_hl(0, "IncSearch", { fg = "#000000", bg = "#4DD4FF" })
+vim.api.nvim_set_hl(0, "CurSearch", { fg = "#000000", bg = "#4DD4FF" })
+-- Force white text in all cmdline popups
+vim.api.nvim_set_hl(0, "NoiceCmdlinePopupBorderInput", { fg = "#4DD4FF", bold = true })

@@ -21,5 +21,7 @@ require("nvim-tree").setup({
   },
 
   -- custom mappings
-  vim.keymap.set('n', '<C-t>', api.tree.open)
+  vim.keymap.set('n', '<C-t>', function()
+    api.tree.find_file({ open = true, focus = true })
+  end)
 })

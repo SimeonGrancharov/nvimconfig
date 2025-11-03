@@ -13,6 +13,11 @@ return require('packer').startup(function(use)
     branch = '0.1.x', requires = { { 'nvim-lua/plenary.nvim' } },
   }
 
+  -- fzf-lua for fast fuzzy finding
+  use { 'ibhagwan/fzf-lua',
+    requires = { 'nvim-tree/nvim-web-devicons' }
+  }
+
   -- theme
   -- use { "catppuccin/nvim", as = "catppuccin" }
   use { "ellisonleao/gruvbox.nvim" }

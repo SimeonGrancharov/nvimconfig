@@ -1,3 +1,6 @@
+-- TELESCOPE SETUP DISABLED - USING FZF-LUA INSTEAD
+do return end
+
 local builtin = require('telescope.builtin')
 local telescope = require('telescope')
 local telescope_actions = require('telescope.actions')
@@ -21,9 +24,31 @@ end)
 
 keymap.set('n', '<ESC>', builtin.buffers, {})
 
+-- Custom border colors for telescope (BMW M inspired)
+vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = "#4DD4FF", bold = true })
+vim.api.nvim_set_hl(0, "TelescopePromptBorder", { fg = "#4DD4FF", bold = true })
+vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { fg = "#3D8BFF", bold = true })
+vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { fg = "#FF5370", bold = true })
+vim.api.nvim_set_hl(0, "TelescopePromptTitle", { fg = "#4DD4FF", bold = true })
+vim.api.nvim_set_hl(0, "TelescopeResultsTitle", { fg = "#3D8BFF", bold = true })
+vim.api.nvim_set_hl(0, "TelescopePreviewTitle", { fg = "#FF5370", bold = true })
+
 telescope.setup({
   defaults = {
-    file_ignore_patterns = { "node_modules" }
+    file_ignore_patterns = { "node_modules" },
+    layout_strategy = 'bottom_pane',
+    layout_config = {
+      bottom_pane = {
+        height = 0.5,
+        prompt_position = "bottom",
+      },
+    },
+    border = true,
+    borderchars = {
+      prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+      results = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+      preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+    },
   },
   pickers = {
     git_files = {
