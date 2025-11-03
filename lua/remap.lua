@@ -1,5 +1,3 @@
-vim.g.mapleader = ","
-
 local keymap = vim.keymap
 
 -- don't copy to buffer when char is deleted

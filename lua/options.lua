@@ -1,3 +1,9 @@
+-- Set leader key BEFORE loading plugins
+vim.g.mapleader = ","
+
+-- Enable true color support
+vim.opt.termguicolors = true
+
 -- mode is shown in our statusline
 vim.o.showmode = false
 -- ruler is integrated in our statusline
