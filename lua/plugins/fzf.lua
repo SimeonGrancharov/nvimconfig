@@ -10,11 +10,28 @@ return {
   config = function()
     local actions = require('fzf-lua.actions')
 
-    -- Custom BMW M inspired colors
-    vim.api.nvim_set_hl(0, "FzfLuaBorder", { fg = "#4DD4FF", bold = true })
-    vim.api.nvim_set_hl(0, "FzfLuaTitle", { fg = "#FF5370", bold = true })
-    vim.api.nvim_set_hl(0, "FzfLuaPreviewBorder", { fg = "#3D8BFF", bold = true })
-    vim.api.nvim_set_hl(0, "FzfLuaPreviewTitle", { fg = "#FF5370", bold = true })
+    -- Set highlights after colorscheme loads
+    vim.api.nvim_create_autocmd("ColorScheme", {
+      pattern = "*",
+      callback = function()
+        vim.api.nvim_set_hl(0, "FzfLuaNormal", { bg = "none" })
+        vim.api.nvim_set_hl(0, "FzfLuaBorder", { fg = "#4DD4FF", bold = true, bg = "none" })
+        vim.api.nvim_set_hl(0, "FzfLuaTitle", { fg = "#FF5370", bold = true, bg = "none" })
+        vim.api.nvim_set_hl(0, "FzfLuaPreviewNormal", { bg = "none" })
+        vim.api.nvim_set_hl(0, "FzfLuaPreviewBorder", { fg = "#3D8BFF", bold = true, bg = "none" })
+        vim.api.nvim_set_hl(0, "FzfLuaPreviewTitle", { fg = "#FF5370", bold = true, bg = "none" })
+      end,
+    })
+
+    -- Apply immediately if colorscheme is already loaded
+    vim.schedule(function()
+      vim.api.nvim_set_hl(0, "FzfLuaNormal", { bg = "none" })
+      vim.api.nvim_set_hl(0, "FzfLuaBorder", { fg = "#4DD4FF", bold = true, bg = "none" })
+      vim.api.nvim_set_hl(0, "FzfLuaTitle", { fg = "#FF5370", bold = true, bg = "none" })
+      vim.api.nvim_set_hl(0, "FzfLuaPreviewNormal", { bg = "none" })
+      vim.api.nvim_set_hl(0, "FzfLuaPreviewBorder", { fg = "#3D8BFF", bold = true, bg = "none" })
+      vim.api.nvim_set_hl(0, "FzfLuaPreviewTitle", { fg = "#FF5370", bold = true, bg = "none" })
+    end)
 
     require('fzf-lua').setup({
       winopts = {

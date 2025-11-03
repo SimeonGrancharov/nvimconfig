@@ -19,7 +19,7 @@ return {
       styles = {
         bold = true,
         italic = true,
-        transparency = false,
+        transparency = true,
       },
 
       groups = {
@@ -52,10 +52,55 @@ return {
         h5 = "pine",
         h6 = "foam",
       },
+
+      highlight_groups = {
+        -- Make fzf-lua transparent
+        FzfLuaNormal = { bg = "none" },
+        FzfLuaBorder = { bg = "none" },
+        FzfLuaTitle = { bg = "none" },
+        FzfLuaPreviewNormal = { bg = "none" },
+        FzfLuaPreviewBorder = { bg = "none" },
+        FzfLuaPreviewTitle = { bg = "none" },
+
+        -- Make trouble transparent
+        TroubleNormal = { bg = "none" },
+        TroubleNormalNC = { bg = "none" },
+        TroubleText = { bg = "none" },
+        TroubleCount = { bg = "none" },
+        TroubleCode = { bg = "none" },
+
+        -- General floating windows
+        NormalFloat = { bg = "none" },
+        FloatBorder = { bg = "none" },
+        FloatTitle = { bg = "none" },
+      },
     },
     config = function(_, opts)
       require("rose-pine").setup(opts)
       vim.cmd("colorscheme rose-pine")
+
+      -- Force transparency after colorscheme loads
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "*",
+        callback = function()
+          -- Floating windows
+          vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+          vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+
+          -- Trouble
+          vim.api.nvim_set_hl(0, "TroubleNormal", { bg = "none" })
+          vim.api.nvim_set_hl(0, "TroubleNormalNC", { bg = "none" })
+
+          -- fzf-lua
+          vim.api.nvim_set_hl(0, "FzfLuaNormal", { bg = "none" })
+          vim.api.nvim_set_hl(0, "FzfLuaBorder", { bg = "none" })
+          vim.api.nvim_set_hl(0, "FzfLuaPreviewNormal", { bg = "none" })
+          vim.api.nvim_set_hl(0, "FzfLuaPreviewBorder", { bg = "none" })
+        end,
+      })
+
+      -- Apply immediately
+      vim.cmd("doautocmd ColorScheme")
     end,
   },
 }

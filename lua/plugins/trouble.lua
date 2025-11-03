@@ -18,6 +18,24 @@ return {
       },
     },
   },
+  config = function(_, opts)
+    require("trouble").setup(opts)
+
+    -- Set highlights after colorscheme loads
+    vim.api.nvim_create_autocmd("ColorScheme", {
+      pattern = "*",
+      callback = function()
+        vim.api.nvim_set_hl(0, "TroubleNormal", { bg = "none" })
+        vim.api.nvim_set_hl(0, "TroubleNormalNC", { bg = "none" })
+      end,
+    })
+
+    -- Apply immediately if colorscheme is already loaded
+    vim.schedule(function()
+      vim.api.nvim_set_hl(0, "TroubleNormal", { bg = "none" })
+      vim.api.nvim_set_hl(0, "TroubleNormalNC", { bg = "none" })
+    end)
+  end,
   keys = {
     { "<leader>xx", function() require("trouble").toggle("preview_float") end },
     { "<leader>xw", function() require("trouble").toggle("loclist") end },

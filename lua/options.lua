@@ -47,6 +47,18 @@ vim.opt.signcolumn = 'yes'
 -- login shell
 vim.opt.shell = 'zsh --login'
 
+-- Force transparent backgrounds for all floating windows
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "BufWinEnter" }, {
+  callback = function()
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+    vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+    vim.api.nvim_set_hl(0, "FzfLuaNormal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "FzfLuaPreviewNormal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "TroubleNormal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "TroubleNormalNC", { bg = "none" })
+  end,
+})
+
 -- Remove unused + organize imports on save (synchronous)
 -- vim.api.nvim_create_autocmd("BufWritePre", {
 --   group = vim.api.nvim_create_augroup("ts_imports", { clear = true }),
