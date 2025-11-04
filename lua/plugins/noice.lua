@@ -70,6 +70,10 @@ return {
         },
         views = {
           cmdline = {
+            position = {
+              row = "96%",
+              col = 0,
+            },
             border = {
               style = "rounded",
               padding = { 0, 1 },
@@ -98,7 +102,7 @@ return {
           },
           cmdline_input = {
             position = {
-              row = "100%",
+              row = "96%",
               col = 0,
             },
             size = {

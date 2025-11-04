@@ -205,9 +205,9 @@ return {
         extensions = {},
       })
 
-      -- Red background for the window separator between splits
-      vim.api.nvim_set_hl(0, "WinSeparator", { bg = "#FF5370", fg = "#FF5370" })
-      vim.api.nvim_set_hl(0, "VertSplit", { bg = "#FF5370", fg = "#FF5370" })
+      -- Thin red window separator between splits
+      vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#FF5370" })
+      vim.api.nvim_set_hl(0, "VertSplit", { fg = "#FF5370" })
     end,
   }
 }
