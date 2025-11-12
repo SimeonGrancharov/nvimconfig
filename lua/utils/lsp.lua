@@ -27,9 +27,10 @@ function M.rename()
   -- Apply highlighting
   vim.api.nvim_set_option_value('winhl', 'Normal:NormalFloat,FloatBorder:FloatBorder', { win = win })
 
-  -- Start in insert mode and select all text
-  vim.cmd('startinsert')
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-a>', true, false, true), 'n', false)
+  -- Start in insert mode with cursor at the end
+  vim.schedule(function()
+    vim.cmd('startinsert!')
+  end)
 
   -- Enable arrow keys
   local opts = { buffer = buf, noremap = true, silent = true }
