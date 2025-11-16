@@ -3,7 +3,7 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   opts = {
     signs = {
-      add          = { text = '│' },
+      add          = { text = '+' },
       change       = { text = '│' },
       delete       = { text = '_' },
       topdelete    = { text = '‾' },
