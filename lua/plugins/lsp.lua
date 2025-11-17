@@ -32,6 +32,9 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
+      -- Setup custom UI overrides
+      require('utils.ui').setup()
+
       -- LSP keymaps
       local on_attach = function(client, bufnr)
         local opts = { buffer = bufnr, remap = false }
@@ -44,8 +47,8 @@ return {
         vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
         vim.keymap.set("n", "<leader>gr", function() vim.lsp.buf.references() end, opts)
         vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-        vim.keymap.set('n', '<leader>rn', function() require('utils.lsp').rename() end, opts)
-        vim.keymap.set('n', '<leader>ca', function() require('utils.lsp').code_action() end, opts)
+        vim.keymap.set('n', '<leader>rn', function() vim.lsp.buf.rename() end, opts)
+        vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
       end
 
       -- Configure completion capabilities
