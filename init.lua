@@ -26,3 +26,8 @@ require("options")
 require("lazy-config")
 require("remap")
 require("joke")
+require("workspace_picker")
+
+vim.keymap.set("n", "<leader>cd", function()
+  require("workspace_picker").pick()
+end, { desc = "Change directory to workspace" })

@@ -2,15 +2,16 @@ return {
   "ibhagwan/fzf-lua",
   dependencies = { "nvim-tree/nvim-web-devicons" },
   keys = {
-    { '<leader>ff', function() require('fzf-lua').files() end, desc = "Find files" },
-    { '<leader>fg', function() require('fzf-lua').git_files() end, desc = "Find git files" },
-    { '<leader>fs', function() require('fzf-lua').grep() end, desc = "Grep search" },
+    { '<leader>ff', function() require('fzf-lua').files({ cwd = vim.fn.getcwd() }) end, desc = "Find files" },
+    { '<leader>fg', function() require('fzf-lua').git_files({ cwd = vim.fn.getcwd() }) end, desc = "Find git files" },
+    { '<leader>fs', function() require('fzf-lua').grep({ cwd = vim.fn.getcwd() }) end, desc = "Grep search" },
     { '<ESC>', function() require('fzf-lua').buffers() end, desc = "Switch buffers" },
   },
+
   config = function()
     local actions = require('fzf-lua.actions')
 
-    -- Set highlights after colorscheme loads
+    -- Set highlights on colorscheme load
     vim.api.nvim_create_autocmd("ColorScheme", {
       pattern = "*",
       callback = function()
@@ -23,7 +24,7 @@ return {
       end,
     })
 
-    -- Apply immediately if colorscheme is already loaded
+    -- Apply highlights immediately
     vim.schedule(function()
       vim.api.nvim_set_hl(0, "FzfLuaNormal", { bg = "none" })
       vim.api.nvim_set_hl(0, "FzfLuaBorder", { fg = "#4DD4FF", bold = true, bg = "none" })
@@ -44,11 +45,13 @@ return {
           layout = "flex",
         },
       },
+
       fzf_opts = {
         ['--layout'] = 'default',
         ['--info'] = 'inline',
         ['--padding'] = '1,2,1,2',
       },
+
       keymap = {
         builtin = {
           ["<Esc>"] = "hide",
@@ -61,6 +64,7 @@ return {
           ["esc"] = "abort",
         },
       },
+
       actions = {
         files = {
           ["default"] = actions.file_edit,
@@ -68,6 +72,7 @@ return {
           ["ctrl-v"] = actions.file_vsplit,
         },
       },
+
       files = {
         prompt = "Files❯ ",
         git_icons = true,
@@ -80,15 +85,18 @@ return {
           },
         },
       },
+
       grep = {
         prompt = "Rg❯ ",
         input_prompt = "Grep❯ ",
       },
+
       buffers = {
         prompt = "Buffers❯ ",
         file_icons = true,
         color_icons = true,
       },
+
       git = {
         files = {
           prompt = "GitFiles❯ ",
