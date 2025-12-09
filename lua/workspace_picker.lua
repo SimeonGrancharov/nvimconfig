@@ -86,6 +86,13 @@ function M.pick()
           if e.label == label then
             vim.cmd("cd " .. vim.fn.fnameescape(e.path))
             vim.notify("CWD → " .. e.path)
+
+            -- Auto-open package.json
+            local pkg = e.path .. "/package.json"
+            if vim.loop.fs_stat(pkg) then
+              vim.cmd("edit " .. vim.fn.fnameescape(pkg))
+            end
+
             return
           end
         end

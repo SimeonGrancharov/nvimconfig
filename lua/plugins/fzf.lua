@@ -1,10 +1,71 @@
+-- smart_grep using explicit input prompt (no function-in-options)
+local function smart_grep()
+  -- prompt the user ourselves so we can parse the input reliably
+  local ok, query = pcall(vim.fn.input, "Rg❯ ")
+  if not ok then
+    vim.notify("Input aborted", vim.log.levels.WARN)
+    return
+  end
+  if not query or query:match("^%s*$") then
+    return
+  end
+
+  -- trim leading/trailing whitespace
+  query = query:gsub("^%s+", ""):gsub("%s+$", "")
+
+  local search_text = query
+  local opts = { cwd = vim.fn.getcwd() } -- default cwd
+
+  -- if starts with @ then search from project root
+  if search_text:match("^@%s*") then
+    search_text = search_text:gsub("^@%s*", "")
+
+    -- find git root (preferred) or fallback to cwd
+    local git_root = nil
+    local ok, out = pcall(vim.fn.systemlist, "git rev-parse --show-toplevel")
+    if ok and out and type(out) == "table" and out[1] and out[1] ~= "" then
+      git_root = out[1]
+    end
+    if git_root and vim.loop.fs_stat(git_root) then
+      opts.cwd = git_root
+    else
+      -- fallback: walk up and look for .git or .gitignore
+      local function find_up(start)
+        local dir = vim.fn.fnamemodify(start, ":p")
+        while dir and dir ~= "/" do
+          if vim.loop.fs_stat(vim.fs.joinpath(dir, ".git")) or vim.loop.fs_stat(vim.fs.joinpath(dir, ".gitignore")) then
+            return dir
+          end
+          local parent = vim.fn.fnamemodify(dir, ":h")
+          if parent == dir then break end
+          dir = parent
+        end
+        return nil
+      end
+      local root = find_up(vim.fn.getcwd())
+      if root then opts.cwd = root end
+    end
+  end
+
+  -- final safety: ensure search_text is non-empty
+  if not search_text or search_text:match("^%s*$") then
+    vim.notify("Empty search (after @ prefix). Aborting.", vim.log.levels.WARN)
+    return
+  end
+
+  -- call fzf-lua grep with a proper string + cwd
+  require("fzf-lua").grep(vim.tbl_extend("force", {
+    search = search_text,
+  }, opts))
+end
+
 return {
   "ibhagwan/fzf-lua",
   dependencies = { "nvim-tree/nvim-web-devicons" },
   keys = {
     { '<leader>ff', function() require('fzf-lua').files({ cwd = vim.fn.getcwd() }) end, desc = "Find files" },
     { '<leader>fg', function() require('fzf-lua').git_files({ cwd = vim.fn.getcwd() }) end, desc = "Find git files" },
-    { '<leader>fs', function() require('fzf-lua').grep({ cwd = vim.fn.getcwd() }) end, desc = "Grep search" },
+    { '<leader>fs', function() smart_grep() end, desc = "Grep search" },
     { '<ESC>', function() require('fzf-lua').buffers() end, desc = "Switch buffers" },
   },
 
