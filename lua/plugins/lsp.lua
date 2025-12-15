@@ -89,7 +89,7 @@ return {
       })
 
       -- Enable all servers
-      for _, server in ipairs({ 'lua_ls', 'ts_ls', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'eslint', 'html', 'prettier', 'somesass_ls', 'tailwindcss' }) do
+      for _, server in ipairs({ 'lua_ls', 'java_language_server', 'ts_ls', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'eslint', 'html', 'prettier', 'somesass_ls', 'tailwindcss' }) do
         vim.lsp.enable(server)
       end
 
