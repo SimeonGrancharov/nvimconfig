@@ -17,6 +17,8 @@ return {
       enable = true,
       update_root = false,
     },
+    sync_root_with_cwd = true,
+    respect_buf_cwd = true,
     experimental = {
       actions = {
         open_file = {
@@ -26,6 +28,9 @@ return {
     },
   },
   keys = {
-    { '<C-t>', ':NvimTreeToggle<CR>', desc = "Toggle file tree" },
+    { '<C-t>', function()
+      local api = require('nvim-tree.api')
+      api.tree.toggle({ path = vim.fn.getcwd() })
+    end, desc = "Toggle file tree" },
   },
 }

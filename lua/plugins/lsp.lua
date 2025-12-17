@@ -88,8 +88,26 @@ return {
         }
       })
 
+      -- Configure pylsp (Python LSP Server with Jedi)
+      vim.lsp.config.pylsp = vim.tbl_deep_extend('force', vim.lsp.config.pylsp or {}, {
+        settings = {
+          pylsp = {
+            plugins = {
+              jedi = {
+                extra_paths = { '.' },
+                environment = vim.fn.getcwd() .. '/.venv/bin/python',
+              },
+              pylint = { enabled = false },
+              pyflakes = { enabled = false },
+              pycodestyle = { enabled = false },
+              mccabe = { enabled = false },
+            },
+          },
+        },
+      })
+
       -- Enable all servers
-      for _, server in ipairs({ 'lua_ls', 'java_language_server', 'ts_ls', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'eslint', 'html', 'prettier', 'somesass_ls', 'tailwindcss' }) do
+      for _, server in ipairs({ 'lua_ls', 'ts_ls', 'pylsp', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'eslint', 'html', 'prettier', 'somesass_ls', 'tailwindcss' }) do
         vim.lsp.enable(server)
       end
 
