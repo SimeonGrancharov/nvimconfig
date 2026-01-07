@@ -1,3 +1,4 @@
+
 -- React Compiler Marker LSP configuration
 -- Note: The server is not published as a standalone npm package
 -- Using local build from the cloned repo
