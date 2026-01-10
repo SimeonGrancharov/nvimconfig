@@ -2,14 +2,14 @@ local M = {}
 
 function M.setup()
   -- Diagnostic Signs (gutter icons)
-  local signs = {
+  local someSigns = {
     Error = "",
     Warn  = "",
     Info  = "",
     Hint  = "",
   }
 
-  for type, icon in pairs(signs) do
+  for type, icon in pairs(someSigns) do
     local hl = "DiagnosticSign" .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
   end
