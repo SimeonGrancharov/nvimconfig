@@ -26,13 +26,24 @@ keymap.set("v", "<Down>", "<Nop>")
 keymap.set("v", "<Left>", "<Nop>")
 keymap.set("v", "<Right>", "<Nop>")
 
--- terminal insert mode navigation
-keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h")
-keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j")
-keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k")
-keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l")
--- Esc exits terminal insert mode
-keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>")
+-- terminal insert mode navigation (exclude fzf buffers)
+local function term_nav(dir)
+	return function()
+		local ft = vim.bo.filetype
+		if ft == "fzf" or ft == "FzfLua" then
+			local key = "<C-" .. dir .. ">"
+			return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), "n", false)
+		end
+		vim.cmd("wincmd " .. dir)
+	end
+end
+
+keymap.set("t", "<C-h>", term_nav("h"))
+keymap.set("t", "<C-j>", term_nav("j"))
+keymap.set("t", "<C-k>", term_nav("k"))
+keymap.set("t", "<C-l>", term_nav("l"))
+-- Tab Tab exits terminal insert mode
+keymap.set("t", "<Tab><Tab>", "<C-\\><C-n>")
 
 -- disable mouse scrolling
 vim.opt.mouse = ""
