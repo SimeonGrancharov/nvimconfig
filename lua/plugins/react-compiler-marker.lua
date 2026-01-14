@@ -1,11 +1,10 @@
 return {
   "SimeonGrancharov/react-compiler-marker",
-  branch = "feat/implement-neovim-client", -- TODO: remove after merge to main
+  branch = "feat/implement-neovim-client",
 
   event = { "BufReadPre *.js,*.jsx,*.ts,*.tsx", "BufNewFile *.js,*.jsx,*.ts,*.tsx" },
 
-  -- Build the LSP server after clone/update
-  build = "npm install && node esbuild.js --production",
+  build = "npm install && BUILD_TARGET=nvim node esbuild.js --production && cp -r packages/nvim-client/lua packages/nvim-client/plugin packages/nvim-client/server .",
 
   opts = {},
 }
