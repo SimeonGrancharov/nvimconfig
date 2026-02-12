@@ -2,7 +2,7 @@ return {
   "coder/claudecode.nvim",
   dependencies = { "folke/snacks.nvim" },
   opts = {
-    terminal_cmd = "/Users/simeongrancharov/.local/bin/claude",
+    terminal_cmd = vim.fn.expand("~/.local/bin/claude"),
   },
   keys = {
     { "<leader>a", nil, desc = "AI/Claude Code" },
