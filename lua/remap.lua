@@ -47,3 +47,9 @@ keymap.set("t", "<Tab><Tab>", "<C-\\><C-n>")
 
 -- disable mouse scrolling
 vim.opt.mouse = ""
+
+-- console.log snippet
+keymap.set("n", "<leader>cl", function()
+    vim.api.nvim_put({ "console.log('[MONKA]', )" }, "l", true, false)
+    vim.cmd("normal! f)i")
+end, { desc = "Insert console.log" })

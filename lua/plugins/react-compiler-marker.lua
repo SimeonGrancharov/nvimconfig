@@ -1,6 +1,6 @@
 return {
   "SimeonGrancharov/react-compiler-marker",
-  branch = "feat/implement-neovim-client",
+  branch = "feat/implement-diagnostics-in-lsp",
 
   event = { "BufReadPre *.js,*.jsx,*.ts,*.tsx", "BufNewFile *.js,*.jsx,*.ts,*.tsx" },
 
