@@ -28,7 +28,6 @@ require("remap")
 require("joke")
 require("workspace_picker")
 require('utils.diagnostics').setup()
-
 vim.keymap.set("n", "<leader>cd", function()
   require("workspace_picker").pick()
 end, { desc = "Change directory to workspace" })
