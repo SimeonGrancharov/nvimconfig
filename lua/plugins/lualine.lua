@@ -55,15 +55,6 @@ return {
         end,
       }
 
-      local claude_cost_component = {
-        function()
-          return require("claude-cost").lualine()
-        end,
-        cond = function()
-          return require("claude-cost").lualine() ~= ""
-        end,
-      }
-
       -- LSP Status component
       local lsp_component = {
         function()
@@ -200,7 +191,7 @@ return {
             "diagnostics"
           },
           lualine_c = { { "filename", path = 4 }, lsp_component, search_component },
-          lualine_x = { claude_cost_component, "|", battery_component, "|", time_component },
+          lualine_x = { battery_component, "|", time_component },
           lualine_y = { "progress", "location" },
           lualine_z = {
             function()
