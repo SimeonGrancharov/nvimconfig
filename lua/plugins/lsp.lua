@@ -49,6 +49,13 @@ return {
         vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
         vim.keymap.set('n', '<leader>rn', function() vim.lsp.buf.rename() end, opts)
         vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
+        vim.keymap.set('n', '<leader>cf', function()
+          vim.lsp.buf.code_action({
+            filter = function(action) return action.isPreferred end,
+            apply = true,
+            context = { diagnostics = vim.diagnostic.get(bufnr) },
+          })
+        end, opts)
       end
 
       -- Configure completion capabilities
@@ -107,7 +114,7 @@ return {
       })
 
       -- Enable all servers
-      for _, server in ipairs({ 'lua_ls', 'ts_ls', 'pylsp', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'somesass_ls', 'tailwindcss' }) do
+      for _, server in ipairs({ 'lua_ls', 'ts_ls', 'pylsp', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'somesass_ls', 'tailwindcss', 'oxc' }) do
         vim.lsp.enable(server)
       end
 
