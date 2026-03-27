@@ -48,8 +48,8 @@ keymap.set("t", "<Tab><Tab>", "<C-\\><C-n>")
 -- disable mouse scrolling
 vim.opt.mouse = ""
 
--- btop floating terminal
-keymap.set("n", "<leader>bt", function()
+-- floating terminal helper
+local function float_term(cmd)
   local buf = vim.api.nvim_create_buf(false, true)
   local width = math.floor(vim.o.columns * 0.9)
   local height = math.floor(vim.o.lines * 0.9)
@@ -66,16 +66,21 @@ keymap.set("n", "<leader>bt", function()
     border = "rounded",
   })
 
-  vim.fn.termopen("btop", {
+  vim.fn.termopen(cmd, {
     on_exit = function()
-      if vim.api.nvim_buf_is_valid(buf) then
-        vim.api.nvim_buf_delete(buf, { force = true })
-      end
+      vim.schedule(function()
+        if vim.api.nvim_buf_is_valid(buf) then
+          vim.api.nvim_buf_delete(buf, { force = true })
+        end
+      end)
     end,
   })
 
   vim.cmd("startinsert")
-end, { desc = "Open btop in floating window" })
+end
+
+keymap.set("n", "<leader>bt", function() float_term("btop") end, { desc = "Open btop" })
+keymap.set("n", "<leader>gh", function() float_term("gh dash") end, { desc = "Open gh dash" })
 
 -- console.log snippet
 keymap.set("n", "<leader>cl", function()
