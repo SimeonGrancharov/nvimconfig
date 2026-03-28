@@ -103,6 +103,10 @@ return {
         end,
       }
 
+      -- Claude Code statusline integration
+      local claude_sl = require("utils.claude-statusline")
+      claude_sl.setup()
+
       -- BMW M Colors Theme
       local bmw_m_theme = {
         normal = {
@@ -191,7 +195,17 @@ return {
             "diagnostics"
           },
           lualine_c = { { "filename", path = 4 }, lsp_component, search_component },
-          lualine_x = { battery_component, "|", time_component },
+          lualine_x = {
+            { claude_sl.model, icon = "󰚩", cond = claude_sl.is_active },
+            { claude_sl.context, cond = claude_sl.is_active },
+            { claude_sl.cost, icon = "󰄘", cond = claude_sl.is_active },
+            { claude_sl.duration, icon = "󱎫", cond = claude_sl.is_active },
+            { claude_sl.lines, cond = claude_sl.is_active },
+            "|",
+            battery_component,
+            "|",
+            time_component,
+          },
           lualine_y = { "progress", "location" },
           lualine_z = {
             function()
