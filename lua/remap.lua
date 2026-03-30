@@ -56,7 +56,7 @@ local function float_term(cmd)
   local row = math.floor((vim.o.lines - height) / 2)
   local col = math.floor((vim.o.columns - width) / 2)
 
-  vim.api.nvim_open_win(buf, true, {
+  local win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
     width = width,
     height = height,
@@ -69,8 +69,8 @@ local function float_term(cmd)
   vim.fn.termopen(cmd, {
     on_exit = function()
       vim.schedule(function()
-        if vim.api.nvim_buf_is_valid(buf) then
-          vim.api.nvim_buf_delete(buf, { force = true })
+        if vim.api.nvim_win_is_valid(win) then
+          vim.api.nvim_win_close(win, true)
         end
       end)
     end,
@@ -81,6 +81,18 @@ end
 
 keymap.set("n", "<leader>bt", function() float_term("btop") end, { desc = "Open btop" })
 keymap.set("n", "<leader>gh", function() float_term("gh dash") end, { desc = "Open gh dash" })
+
+-- focus floating window
+keymap.set({"n", "t"}, "<C-f>", function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local config = vim.api.nvim_win_get_config(win)
+    if config.relative ~= "" then
+      vim.api.nvim_set_current_win(win)
+      vim.cmd("startinsert")
+      return
+    end
+  end
+end, { desc = "Focus floating window" })
 
 -- console.log snippet
 keymap.set("n", "<leader>cl", function()
