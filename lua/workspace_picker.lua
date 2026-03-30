@@ -101,4 +101,41 @@ function M.pick()
   })
 end
 
+-- Auto-change cwd when switching to a file in a different workspace
+local function find_workspace_root(filepath)
+  if not filepath or filepath == "" then return nil end
+
+  local monorepo_root = find_web_root(vim.fn.fnamemodify(filepath, ":p:h"))
+  if not monorepo_root then return nil end
+
+  local path = vim.fn.fnamemodify(filepath, ":p:h")
+
+  while path and path ~= "/" and path:find(monorepo_root, 1, true) == 1 do
+    local parent = vim.fn.fnamemodify(path, ":h")
+    local parent_name = vim.fn.fnamemodify(parent, ":t")
+
+    if parent_name == "apps" or parent_name == "packages" then
+      return path
+    end
+
+    if parent == path then break end
+    path = parent
+  end
+
+  return nil
+end
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("auto_workspace_cwd", { clear = true }),
+  callback = function()
+    local bufpath = vim.api.nvim_buf_get_name(0)
+    if bufpath == "" or vim.bo.buftype ~= "" then return end
+
+    local workspace_root = find_workspace_root(bufpath)
+    if workspace_root and workspace_root ~= vim.fn.getcwd() then
+      vim.cmd("cd " .. vim.fn.fnameescape(workspace_root))
+    end
+  end,
+})
+
 return M
