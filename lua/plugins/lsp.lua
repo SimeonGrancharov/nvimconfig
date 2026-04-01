@@ -20,7 +20,8 @@ return {
           'eslint',
           'html',
           'lua_ls',
-          'cssls'
+          'cssls',
+          'yamlls',
         },
       })
     end,
@@ -113,8 +114,26 @@ return {
         },
       })
 
+      vim.lsp.config.yamlls = vim.tbl_deep_extend('force', vim.lsp.config.yamlls or {}, {
+        settings = {
+          yaml = {
+            schemaStore = {
+              enable = true,
+              url = 'https://www.schemastore.org/api/json/catalog.json',
+            },
+            schemas = {
+              ['https://json.schemastore.org/github-workflow.json'] = '/.github/workflows/*',
+              ['https://json.schemastore.org/github-action.json'] = '/.github/actions/*/action.yml',
+            },
+            validate = true,
+            hover = true,
+            completion = true,
+          },
+        },
+      })
+
       -- Enable all servers
-      for _, server in ipairs({ 'lua_ls', 'ts_ls', 'pylsp', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'somesass_ls', 'tailwindcss', 'oxc' }) do
+      for _, server in ipairs({ 'lua_ls', 'ts_ls', 'pylsp', 'cssls', 'html', 'eslint', 'css_variables', 'cssmodules_ls', 'somesass_ls', 'tailwindcss', 'oxc', 'yamlls' }) do
         vim.lsp.enable(server)
       end
 

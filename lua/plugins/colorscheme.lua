@@ -73,6 +73,16 @@ return {
         NormalFloat = { bg = "none" },
         FloatBorder = { bg = "none" },
         FloatTitle = { bg = "none" },
+
+        -- YAML highlighting - more color variety
+        ["@label.yaml"] = { fg = "iris", bold = true },           -- mapping keys (purple)
+        ["@string.yaml"] = { fg = "gold" },                       -- string values (gold)
+        ["@boolean.yaml"] = { fg = "rose", bold = true },         -- true/false (pink)
+        ["@number.yaml"] = { fg = "love" },                       -- numbers (red)
+        ["@property.yaml"] = { fg = "foam", italic = true },      -- properties (teal)
+        ["@punctuation.special.yaml"] = { fg = "iris" },          -- anchors, aliases (purple)
+        ["@keyword.directive.yaml"] = { fg = "pine", bold = true }, -- directives (blue)
+        ["@constant.builtin.yaml"] = { fg = "rose" },             -- null, etc. (pink)
       },
     },
     config = function(_, opts)

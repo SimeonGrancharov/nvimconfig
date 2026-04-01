@@ -7,7 +7,7 @@ return {
       "windwp/nvim-ts-autotag",
     },
     config = function()
-      require("nvim-treesitter").install({
+      local parsers = {
         "javascript",
         "typescript",
         "tsx",
@@ -21,6 +21,16 @@ return {
         "query",
         "markdown",
         "markdown_inline",
+        "yaml",
+      }
+
+      require("nvim-treesitter").install(parsers)
+
+      -- Enable treesitter highlighting for all installed parsers
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+        end,
       })
     end,
   },
