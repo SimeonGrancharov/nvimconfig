@@ -1,14 +1,13 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    lazy = false,
     build = ":TSUpdate",
     dependencies = {
-      "nvim-treesitter/playground",
       "windwp/nvim-ts-autotag",
     },
-    main = "nvim-treesitter.configs",
-    opts = {
-      ensure_installed = {
+    config = function()
+      require("nvim-treesitter").install({
         "javascript",
         "typescript",
         "tsx",
@@ -19,15 +18,11 @@ return {
         "lua",
         "vim",
         "vimdoc",
-        "query"
-      },
-      sync_install = false,
-      auto_install = true,
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-      },
-    },
+        "query",
+        "markdown",
+        "markdown_inline",
+      })
+    end,
   },
   {
     "nvim-treesitter/nvim-treesitter-context",
