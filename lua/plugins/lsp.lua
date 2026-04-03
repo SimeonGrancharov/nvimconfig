@@ -52,9 +52,8 @@ return {
         vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
         vim.keymap.set('n', '<leader>cf', function()
           vim.lsp.buf.code_action({
-            filter = function(action) return action.isPreferred end,
+            context = { only = { "source.fixAll.eslint" }, diagnostics = vim.diagnostic.get(bufnr) },
             apply = true,
-            context = { diagnostics = vim.diagnostic.get(bufnr) },
           })
         end, opts)
       end
