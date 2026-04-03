@@ -50,12 +50,7 @@ return {
         vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
         vim.keymap.set('n', '<leader>rn', function() vim.lsp.buf.rename() end, opts)
         vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
-        vim.keymap.set('n', '<leader>cf', function()
-          vim.lsp.buf.code_action({
-            context = { only = { "source.fixAll.eslint" }, diagnostics = vim.diagnostic.get(bufnr) },
-            apply = true,
-          })
-        end, opts)
+
       end
 
       -- Configure completion capabilities

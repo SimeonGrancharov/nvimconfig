@@ -1,4 +1,6 @@
 return {
-  "soulsam480/nvim-oxlint",
-  opts = {}
+  "SimeonGrancharov/nvim-oxlint-fix-on-save",
+  config = function()
+    require('oxlint-fix-on-save').setup()
+  end,
 }
