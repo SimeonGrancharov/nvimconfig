@@ -1,16 +1,33 @@
+-- Neovim (terminal) can't read the monitor's pixel height, so use the row
+-- count as a proxy: a portrait monitor reports far more rows than the laptop.
+-- Tall screen  -> vertical split (side panel), editor keeps full height.
+-- Short screen -> horizontal split (bottom panel), the previous behaviour.
+local function is_tall_screen()
+  return vim.o.lines > 80
+end
+
 return {
   "coder/claudecode.nvim",
   dependencies = { "folke/snacks.nvim" },
   opts = {
     terminal_cmd = vim.fn.expand("~/.local/bin/claude"),
-    terminal = {
-      provider = "snacks",
-      snacks_win_opts = {
-        position = "bottom",
-        height = 0.4,
-        width = 0,
+    terminal = is_tall_screen()
+        and {
+          provider = "snacks",
+          snacks_win_opts = {
+            position = "right",
+            width = 0.4,
+            height = 0,
+          },
+        }
+      or {
+        provider = "snacks",
+        snacks_win_opts = {
+          position = "bottom",
+          height = 0.4,
+          width = 0,
+        },
       },
-    },
   },
   keys = {
     { "<leader>a", nil, desc = "AI/Claude Code" },
