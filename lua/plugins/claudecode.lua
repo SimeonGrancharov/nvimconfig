@@ -3,6 +3,14 @@ return {
   dependencies = { "folke/snacks.nvim" },
   opts = {
     terminal_cmd = vim.fn.expand("~/.local/bin/claude"),
+    terminal = {
+      provider = "snacks",
+      snacks_win_opts = {
+        position = "bottom",
+        height = 0.4,
+        width = 0,
+      },
+    },
   },
   keys = {
     { "<leader>a", nil, desc = "AI/Claude Code" },
