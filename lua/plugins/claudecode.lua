@@ -1,9 +1,11 @@
--- Neovim (terminal) can't read the monitor's pixel height, so use the row
--- count as a proxy: a portrait monitor reports far more rows than the laptop.
--- Tall screen  -> vertical split (side panel), editor keeps full height.
--- Short screen -> horizontal split (bottom panel), the previous behaviour.
-local function is_tall_screen()
-  return vim.o.lines > 80
+-- Terminal Neovim only sees the character grid (lines x columns), never the
+-- monitor's pixels. Detect orientation from the grid's aspect ratio instead:
+-- cells are ~2:1 (tall:wide), so a landscape laptop reports columns/lines ~4
+-- while a portrait monitor reports ~1. This is font-size independent.
+-- Portrait (vertical monitor) -> bottom panel; lots of height to spare.
+-- Landscape (laptop)          -> right side panel; lots of width to spare.
+local function is_portrait_screen()
+  return vim.o.columns < vim.o.lines * 2.2
 end
 
 return {
@@ -11,21 +13,21 @@ return {
   dependencies = { "folke/snacks.nvim" },
   opts = {
     terminal_cmd = vim.fn.expand("~/.local/bin/claude"),
-    terminal = is_tall_screen()
+    terminal = is_portrait_screen()
         and {
           provider = "snacks",
           snacks_win_opts = {
-            position = "right",
-            width = 0.4,
-            height = 0,
+            position = "bottom",
+            height = 0.4,
+            width = 0,
           },
         }
       or {
         provider = "snacks",
         snacks_win_opts = {
-          position = "bottom",
-          height = 0.4,
-          width = 0,
+          position = "right",
+          width = 0.4,
+          height = 0,
         },
       },
   },
